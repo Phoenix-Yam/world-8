@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🔴 次のサイトへ進むボタンのイベント 🔴
     nextQuestButton.addEventListener('click', () => {
-        window.location.href = '../quest_4/index.html';
+        window.location.href = 'https://phoenix-yam.github.io/world-10/';
     });
 
     // ------------------------------------
@@ -688,4 +688,5 @@ document.addEventListener('DOMContentLoaded', () => {
         addPanelEventListeners(panel, true); 
     });
     redrawLines();
+
 });
