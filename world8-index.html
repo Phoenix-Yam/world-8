@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界のつなぎ方 - ステージ3-2</title>
+    <link rel="stylesheet" href="world8-style.css">
+</head>
+<body>
+
+    <div id="circuit-mode-container">
+        <h1>世界のつなぎ方</h1>
+        
+        <div id="quest-area">
+            <h2 id="current-quest-title">依頼3-2：黒い犬を届けよう</h2>
+        </div>
+
+        <div id="panel-palette">
+            <h2>世界パネル</h2>
+            <div class="panel" id="panel-A" draggable="true" data-type="world">A</div>
+            <div class="panel" id="panel-B" draggable="true" data-type="world">B</div>
+            <div class="panel" id="panel-C" draggable="true" data-type="world">C</div>
+            <div class="panel" id="panel-D" draggable="true" data-type="world">D</div>
+            <div class="panel" id="panel-E" draggable="true" data-type="world">E</div>
+            <div class="panel" id="panel-F" draggable="true" data-type="world">F</div>
+            <div class="panel" id="panel-G" draggable="true" data-type="world">G</div>
+            <div class="panel" id="panel-H" draggable="true" data-type="world">H</div>
+            <div class="panel" id="panel-I" draggable="true" data-type="world">I</div>
+            <div class="panel" id="panel-J" draggable="true" data-type="world">J</div>
+            <div class="panel" id="panel-K" draggable="true" data-type="world">K</div>
+            <div class="panel" id="panel-L" draggable="true" data-type="world">L</div>
+            <div class="panel" id="panel-M" draggable="true" data-type="world">M</div>
+        </div>
+
+        
+        <div id="main-circuit-container"> 
+            
+            <div id="word-input-area">
+                <h2>単語パネル</h2>
+                <div id="single-word-slot" class="word-slot" data-slot-index="1" data-slot-text="">
+                    </div>
+                <div id="word-check-button-area">
+                    <div id="word-transform-button"></div>
+                </div>
+                
+                <hr>
+
+                <div id="gojuon-palette">
+                    </div>
+            </div>
+            
+            <div id="workspace">
+                <canvas id="circuit-canvas"></canvas>
+                
+                <div id="fixed-word-panel-container">
+                    </div>
+                
+                <div id="fixed-goal-panel-container">
+                    <div class="panel fixed-panel" id="fixed-goal-panel" data-original-id="GOAL" data-type="fixed-goal">GOAL</div>
+                </div>
+            </div>
+        </div> 
+
+        <button id="next-quest-button" class="hidden">次の依頼へ</button>
+        <div id="control-area">
+            <button id="delete-selected-button" style="display:none;">🗑️ 削除</button>
+            <button id="check-button">判定する</button>
+            <div id="result-display">操作説明を見て、回路を作成してください。</div> 
+            <div id="instruction-area">
+                <h3>💡 操作説明</h3>
+                <ul>
+                    <li>**配置**: パレットを**クリック**</li>
+                    <li>**移動**: 配置したパネルをドラッグ</li>
+                    <li>**接続**: パネルを**クリック** → 次のパネルを**クリック**</li>
+                    <li>**削除**: パネル/線を**クリックで選択** → **Delete/Backspaceキー**</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <button id="noun-checker-toggle">名詞チェッカーを開く/閉じる</button>
+
+
+    <div id="noun-checker-area" class="hidden">
+        <h2>名詞チェッカー</h2>
+        
+        <div id="noun-button-grid">
+            <button class="noun-button" data-panel-id="A">A</button>
+            <button class="noun-button" data-panel-id="B">B</button>
+            <button class="noun-button" data-panel-id="C">C</button>
+            <button class="noun-button" data-panel-id="D">D</button>
+            <button class="noun-button" data-panel-id="E">E</button>
+            <button class="noun-button" data-panel-id="F">F</button>
+            <button class="noun-button" data-panel-id="G">G</button>
+            <button class="noun-button" data-panel-id="H">H</button>
+            <button class="noun-button" data-panel-id="I">I</button>
+            <button class="noun-button" data-panel-id="J">J</button>
+            <button class="noun-button" data-panel-id="K">K</button>
+            <button class="noun-button" data-panel-id="L">L</button>
+            <button class="noun-button" data-panel-id="M">M</button>
+        </div>
+
+        <div id="noun-checker-display">
+            <div id="noun-checker-image-area">
+                <div class="noun-panel-segment" data-index="1"></div>
+                <div class="noun-panel-segment" data-index="2"></div>
+                <div class="noun-panel-segment" data-index="3"></div>
+                <div class="noun-panel-segment" data-index="4"></div>
+                <div class="noun-panel-segment" data-index="5"></div>
+                <div class="noun-panel-segment" data-index="6"></div>
+                <div class="noun-panel-segment" data-index="7"></div>
+                <div class="noun-panel-segment" data-index="8"></div>
+                <div class="noun-panel-segment" data-index="9"></div>
+            </div>
+            <div id="noun-checker-result-text">パネルを選択し、画像をクリックしてください。</div>
+        </div>
+    </div>
+
+
+    <script src="world8-script.js"></script>
+</body>
+</html>

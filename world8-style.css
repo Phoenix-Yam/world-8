@@ -1,0 +1,532 @@
+/* 全要素のボックスモデルをborder-boxにする */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 5px; 
+}
+
+/* 依頼タイトルエリア */
+#quest-area {
+    margin-bottom: 20px;
+}
+#current-quest-title {
+    font-size: 1.5em;
+    color: #cc0000;
+    margin: 0;
+}
+
+/* 🔴 メインコンテナ: ワークスペースと単語入力を横並びにする 🔴 */
+#main-circuit-container {
+    display: flex;
+    gap: 20px;
+    width: 1040px; /* PC用固定幅 (800 + 220 + 20) */
+    max-width: 95vw; 
+    margin-bottom: 20px;
+    flex-direction: row-reverse; /* ワークスペースを右に配置 */
+}
+
+
+/* --- 世界パネル (旧：部品パレット) --- */
+#panel-palette {
+    position: relative; 
+    width: 800px; /* PC用固定幅 */
+    height: 60px; 
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    /* 修正: パネルの自動配置をflexに変更 */
+    display: flex; 
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px; /* パネル間の隙間 */
+}
+
+#panel-palette h2 {
+    position: absolute;
+    left: 10px;
+    top: -15px; 
+    font-size: 1em;
+    color: #666;
+    z-index: 10;
+    background-color: #fff; 
+    padding: 0 5px;
+}
+
+/* ワークスペースとキャンバス */
+#workspace {
+    width: 800px; /* PC用固定幅 */
+    height: 600px;
+    border: 2px dashed #999;
+    background-color: #ffffff;
+    position: relative; 
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+#circuit-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* 🔴 単語入力エリア（左側） 🔴 */
+#word-input-area {
+    width: 240px; /* 幅を広げる */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#word-input-area h2 {
+    margin-top: 0;
+    font-size: 1.1em;
+}
+
+/* 単語入力スロット (単一なので中央に配置) */
+#single-word-slot {
+    width: 100px; /* 参照用スロットの幅を広げる */
+    height: 45px;
+    border: 2px solid #5cb85c; 
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em; 
+    font-weight: bold;
+    cursor: default;
+    margin-bottom: 15px;
+    
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+/* 🔴 盤面上の固定単語パネルコンテナ 🔴 */
+#fixed-word-panel-container {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* ワークスペースの左端に固定 */
+    transform: translateY(-50%);
+    width: 100px; 
+    height: 45px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; 
+}
+
+/* 🔴 追加: 固定ゴールパネルコンテナ 🔴 */
+#fixed-goal-panel-container {
+    position: absolute;
+    top: 50%;
+    right: 10px; /* ワークスペースの右端に固定 */
+    transform: translateY(-50%);
+    width: 100px; 
+    height: 45px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* 50音パレット */
+#gojuon-palette {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 4列配置に変更 */
+    gap: 5px; 
+    width: 100%; 
+    margin-top: 10px;
+}
+
+/* ----------------------------------------------------- */
+/* --- 共通パネルスタイル (World Panel / Gojuon Panel) --- */
+/* ----------------------------------------------------- */
+.panel {
+    width: 40px;
+    height: 40px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.1s, box-shadow 0.1s; 
+    user-select: none;           
+    -webkit-user-select: none;   
+    -moz-user-select: none;      
+    -ms-user-select: none;       
+    user-drag: none;             
+    -webkit-user-drag: none;     
+}
+
+/* 🌎 世界パネル固有の背景色 */
+.panel[data-type="world"] {
+    background-color: #007bff; 
+    cursor: grab;
+}
+
+/* --- 追加: ワークスペースに配置済みの世界パネルのスタイル --- */
+#panel-palette .panel.placed-on-workspace {
+    background-color: #888; /* 灰色 */
+    color: #ccc;            /* 文字色を薄く */
+    cursor: default;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+/* 🗣️ 単語パネル固有の背景色 */
+.panel[data-type="gojuon"] {
+    background-color: #add8e6; 
+    cursor: pointer; 
+}
+
+/* 🔴 Gojuonパネル（パレット内）のサイズと文字調整 🔴 */
+#gojuon-palette .panel[data-type="gojuon"] {
+    width: auto; 
+    min-width: 100px;
+    max-width: 200%; 
+    height: 45px; 
+    font-size: 0.8em; 
+    padding: 0 5px; 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: clip;
+}
+
+/* 盤面上の単語パネル */
+#fixed-word-panel-container .panel {
+    cursor: default; 
+    width: 100px; 
+    height: 45px;
+    font-size: 1em;
+    padding: 2px 5px;
+    position: relative !important; 
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+/* 🔴 追加: ゴールパネルのスタイル 🔴 */
+#fixed-goal-panel-container .panel {
+    cursor: default; 
+    width: 100px; 
+    height: 45px;
+    font-size: 1em;
+    padding: 2px 5px;
+    position: relative !important; 
+    background-color: #28a745; /* 緑色 */
+    border: 3px solid #1e7e34;
+}
+
+/* 接続開始時のハイライト */
+.panel.selected-for-line {
+    border: 3px solid red !important; 
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7) !important;
+    transform: scale(1.1) !important; 
+}
+
+/* 選択状態のハイライト (Deleteキー削除用) */
+.panel.active-selected {
+    box-shadow: 0 0 15px 5px rgba(255, 165, 0, 0.7); 
+    border: 3px solid orange; 
+    transform: scale(1.05); 
+}
+
+
+/* 制御エリア */
+#control-area {
+    position: relative;
+    width: 800px; 
+    margin: 15px auto 20px auto; 
+    padding: 10px; 
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.8); 
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#check-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    order: 2; 
+}
+
+#delete-selected-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #dc3545; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    order: 1; 
+    margin-right: 10px;
+}
+#result-display {
+    padding: 8px 15px;
+    min-width: 250px;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #e2e3e5;
+    border: 1px solid #ccc;
+    order: 3; 
+    margin: 0 10px; 
+}
+#instruction-area {
+    padding: 10px;
+    background-color: #f0f0ff; 
+    border: 1px solid #a0a0ff;
+    border-radius: 5px;
+    text-align: left;
+    width: 250px; 
+    order: 4; 
+}
+/* 🔴 追加: 次のサイトへ進むボタンのスタイル 🔴 */
+#next-quest-button {
+    padding: 30px 200px;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    order: 5; 
+    margin-left: 10px;
+}
+
+/* 接続線クリック検出用（透明なDOM要素） */
+.connection-line {
+    position: absolute;
+    background-color: transparent;
+    cursor: pointer;
+    z-index: 5; 
+}
+
+/* 接続線が選択されたときのスタイル（ハイライト） */
+.connection-line.active-selected-line {
+    box-shadow: 0 0 15px 5px rgba(255, 100, 100, 0.7); 
+    border: 2px solid red; 
+    border-radius: 5px;
+}
+
+
+/* --- 名詞チェッカーエリア --- */
+#noun-checker-toggle {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    background-color: #ffc107;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#noun-checker-area {
+    width: 500px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#noun-checker-area h2 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+#noun-button-grid {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center;
+    gap: 5px;
+    width: 100%; 
+    margin: 0 auto 15px;
+    padding: 10px 0;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.noun-button {
+    width: 40px;
+    height: 40px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.1s, transform 0.1s;
+}
+
+.noun-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+}
+
+.noun-button:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
+}
+
+#noun-checker-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#noun-checker-image-area {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(3, 1fr);
+    width: 450px; 
+    height: 450px; 
+    margin: 10px auto 15px;
+    border: 3px solid #333;
+    overflow: hidden;
+    position: relative;
+    background-color: #f0f0f0; 
+}
+
+/* 画像を3x3に分割して表示するためのセグメントスタイル */
+.noun-panel-segment {
+    border: 1px solid rgba(0, 0, 0, 0.3); 
+    cursor: pointer;
+    transition: opacity 0.1s;
+    background-size: 300% 300%; 
+    background-image: none; 
+}
+
+.noun-panel-segment:hover {
+    opacity: 0.8;
+}
+
+/* 3x3分割の座標設定（1～9の番号に対応） */
+.noun-panel-segment[data-index="1"] { background-position: 0% 0%; }
+.noun-panel-segment[data-index="2"] { background-position: 50% 0%; }
+.noun-panel-segment[data-index="3"] { background-position: 100% 0%; }
+.noun-panel-segment[data-index="4"] { background-position: 0% 50%; }
+.noun-panel-segment[data-index="5"] { background-position: 50% 50%; }
+.noun-panel-segment[data-index="6"] { background-position: 100% 50%; }
+.noun-panel-segment[data-index="7"] { background-position: 0% 100%; }
+.noun-panel-segment[data-index="8"] { background-position: 50% 100%; }
+.noun-panel-segment[data-index="9"] { background-position: 100% 100%; }
+
+#noun-checker-result-text {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    min-height: 1.5em;
+    padding: 10px;
+}
+
+/* 初期状態を非表示にする */
+.hidden {
+    display: none !important;
+}
+
+/* 🔴 追加: 依頼進行に応じて非表示にするパネル 🔴 */
+.hidden-panel {
+    display: none !important;
+}
+
+
+/* --- 🌟 モバイル対応 (最大幅 840px 以下) 🌟 --- */
+@media (max-width: 840px) {
+    /* すべての要素のボックスモデルをborder-boxにする */
+    * { box-sizing: border-box; }
+    body { padding: 5px; align-items: stretch; overflow-x: hidden; }
+
+    /* ワークスペースとパレットの幅を画面いっぱいに設定 */
+    #panel-palette, #workspace, #word-input-area, #noun-checker-area, #control-area {
+        width: 98%; 
+        min-width: 300px; 
+        margin: 0 auto;
+    }
+    
+    /* メインコンテナのレイアウトを縦並びにする */
+    #main-circuit-container {
+        flex-direction: column;
+        width: 98%;
+        max-width: none;
+        gap: 10px;
+    }
+
+    /* ワークスペースと単語入力エリアの順序 */
+    #workspace { order: 2; height: 400px; margin-bottom: 0; } 
+    #word-input-area { order: 1; width: 100%; margin-bottom: 10px; }
+    
+    #panel-palette { height: auto; min-height: 80px; padding-top: 30px; display: flex; }
+    #panel-palette h2 { position: absolute; top: 0; left: 10px; background-color: #f4f4f9; padding: 0 5px; margin: 0; }
+
+    /* 🔴 パレット内のパネル配置の調整 🔴 */
+    #panel-palette .panel {
+        position: relative !important; 
+        display: inline-flex; 
+        margin: 4px; 
+        left: auto !important; 
+        top: auto !important;  
+        transform: none; 
+    }
+
+    /* 制御エリアの縦並び化 */
+    #control-area {
+        position: relative;
+        bottom: auto; right: auto;
+        flex-direction: column; 
+        gap: 10px;
+        margin-top: 10px;
+        
+        #check-button, #delete-selected-button, #result-display, #instruction-area {
+            width: 100%; margin: 0; order: initial; 
+        }
+    }
+    
+    /* 名詞チェッカーの3x3画像エリアを画面幅に合わせる */
+    #noun-checker-image-area {
+        width: 95%; 
+        height: auto;
+        aspect-ratio: 1 / 1; 
+        max-width: 400px;
+        max-height: 400px;
+        margin: 10px auto;
+    }
+}
