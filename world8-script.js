@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         redrawLines();
 
         if (isInitialLoad) {
-             resultDisplay.textContent = `現在の依頼は「${QUESTS[currentQuestId].title}」です。単語パネルに「${nextRequiredWord}」をセットしてください。`;
+             resultDisplay.textContent = `現在の依頼は「${QUESTS[currentQuestId].title}」です。単語パネルをセットしてください。`;
         } else {
-             resultDisplay.textContent = `次の依頼のために、単語パネルに「${nextRequiredWord}」をセットしてください。`;
+             resultDisplay.textContent = `次の依頼のために、単語パネルをセットしてください。`;
         }
         resultDisplay.style.backgroundColor = '#f0f0ff';
         resultDisplay.color = '#005f73';
@@ -496,13 +496,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const placedWordPanel = fixedWordPanel; 
         
         if (placedWordPanel.dataset.originalId === ' ') {
-             resultDisplay.textContent = `❌ 不正解です。単語パネルに「${requiredWordId}」をセットしてください。`;
+             resultDisplay.textContent = `❌ 不正解です。`;
              resultDisplay.style.backgroundColor = '#f8d7da'; 
              resultDisplay.color = '#721c24';
              return;
         }
         if (placedWordPanel.dataset.originalId !== requiredWordId) {
-             resultDisplay.textContent = `❌ 不正解です。現在必要な単語は「${requiredWordId}」です。`;
+             resultDisplay.textContent = `❌ 不正解です。`;
              resultDisplay.style.backgroundColor = '#f8d7da'; 
              resultDisplay.color = '#721c24';
              return;
@@ -690,3 +690,4 @@ document.addEventListener('DOMContentLoaded', () => {
     redrawLines();
 
 });
+
