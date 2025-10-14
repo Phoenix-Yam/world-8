@@ -107,13 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateFixedWordPanelChar(newChar) {
         if (!fixedWordPanel) return;
+        
+        // ワークスペース内のパネルのIDと表示を更新
         fixedWordPanel.textContent = newChar;
         fixedWordPanel.dataset.originalId = newChar;
+        
+        // 単語スロットの表示も更新
         singleWordSlot.textContent = newChar;
         singleWordSlot.dataset.slotText = newChar;
-        connections = connections.filter(c => c.startId !== newChar && c.endId !== newChar);
+
+        // 🔴 修正: 単語が変わったら、接続はすべて無効になるため、接続リストを完全にクリアする 🔴
+        connections = [];
         redrawLines();
-        resultDisplay.textContent = `単語パネルが「${newChar}」にセットされました。`;
+        
+        resultDisplay.textContent = `単語パネルが「${newChar}」にセットされました。全ての接続がリセットされました。`;
         resultDisplay.style.backgroundColor = '#e2e3e5';
         resultDisplay.color = '#333';
     }
@@ -690,4 +697,5 @@ document.addEventListener('DOMContentLoaded', () => {
     redrawLines();
 
 });
+
 
