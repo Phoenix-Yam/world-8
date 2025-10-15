@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         '3-2': { 
             title: '依頼3-2：黒い犬を届けよう', 
             // 修正: required_nodesにはJが一つしか必要ないため、重複を削除
-            paths: [ { required_connections: [['がらすけーす', 'L'], ['L', 'H'], ['H', 'J'], ['がらすけーす', 'A'], ['A', 'K'], ['K', 'J'], ['J', 'GOAL']], required_nodes: ['がらすけーす', 'L', 'H', 'J', 'A', 'K', 'GOAL'] } ], 
-            required_word: 'がらすけーす'
+            paths: [ { required_connections: [['みっくすじゅーす', 'L'], ['L', 'G'], ['G', 'I'], ['みっくすじゅーす', 'A'], ['A', 'D'], ['D', 'I'], ['I', 'GOAL']], required_nodes: ['みっくすじゅーす', 'L', 'G', 'I', 'A', 'D', 'GOAL'] } ], 
+            required_word: 'みっくすじゅーす'
         }
     };
     
@@ -697,6 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
     redrawLines();
 
 });
+
 
 
 
