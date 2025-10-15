@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeNounPanelId = null; 
     
     // 🔴 修正: 前のサイトでクリアした単語を初期値として設定 🔴
-    let clearedWords = new Set(['こうら', 'べる', 'はんど', 'かもん', 'むだあし', 'ふうき']);
+    let clearedWords = new Set(['こうら', 'べる', 'はんど', 'かもん', 'むだあし', 'うきふね']);
     
     // 🔴 依頼のデータ構造 🔴
     const QUESTS = {
@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const QUEST_ORDER = ['3-2']; // このサイトの依頼順序
 
     // 🔴 単語パネルの定義 🔴
-    const ALL_GOJUON_KEYS = ['こうら', 'べる', 'はんど', 'かもん', 'ふうき','しわす', 'がらすけーす', 'むだあし', 'へら'];
-    const CLEARED_WORD_MAPPING = { '3-2': 'がらすけーす' };
+    const ALL_GOJUON_KEYS = ['こうら', 'べる', 'はんど', 'うきふね','かもん', 'しわす', 'へら', 'みっくすじゅーす', 'むだあし'];
+    const CLEARED_WORD_MAPPING = { '3-2': 'みっくすじゅーす' };
     
     // 🔴 名詞チェッカーのロジックマップ 🔴
     const IMAGE_MAPPING = {
@@ -697,5 +697,6 @@ document.addEventListener('DOMContentLoaded', () => {
     redrawLines();
 
 });
+
 
 
